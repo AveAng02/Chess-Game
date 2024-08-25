@@ -1,37 +1,35 @@
-const ws = new WebSocket("ws://localhost:8080"); 
 
-const buttons = document.querySelectorAll(".btn-secondary");
+window.addEventListener("DOMContentLoaded", () => {
 
-// Function to send the button ID
-function sendButtonId(buttonId) {
-  if (ws.readyState === WebSocket.OPEN) {
-    ws.send(buttonId);
-  } else {
-    console.error("WebSocket connection not open!");
-  }
-}
+  const messages = document.createElement("ul");
+  document.body.appendChild(messages);
 
-// Add click event listener to all secondary buttons
-buttons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const buttonId = button.id; // Get the button ID
-    sendButtonId(buttonId); // Send the button ID 
+  const websocket = new WebSocket("ws://localhost:6789/");
+
+  document.querySelector(".minus").addEventListener("click", () => {
+    websocket.send(JSON.stringify({ action: "minus" }));
   });
+
+  document.querySelector(".plus").addEventListener("click", () => {
+    websocket.send(JSON.stringify({ action: "plus" }));
+  });
+
+  websocket.onmessage = ({ data }) => {
+    const event = JSON.parse(data);
+    switch (event.type) {
+      case "value":
+        document.querySelector(".value").textContent = event.value[0];
+        const message = document.createElement("li");
+        const content = document.createTextNode(event.value[1]);
+        message.appendChild(content);
+        messages.appendChild(message);
+        break;
+      case "users":
+        const users = `${event.count} user${event.count == 1 ? "" : "s"}`;
+        document.querySelector(".users").textContent = users;
+        break;
+      default:
+        console.error("unsupported event", event);
+    }
+  };
 });
-
-
-ws.onopen = () => {
-  console.log("WebSocket connection opened!");
-};
-
-ws.onmessage = (event) => {
-  console.log("Received message: ", event.data);
-};
-
-ws.onerror = (error) => {
-  console.error("WebSocket error: ", error);
-};
-
-ws.onclose = () => {
-  console.log("WebSocket connection closed!");
-};
