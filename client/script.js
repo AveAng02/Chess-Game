@@ -1,8 +1,5 @@
 const ws = new WebSocket("ws://localhost:8080"); // Replace with your server address and port
 
-const messageInput = document.getElementById("messageInput");
-const sendButton = document.getElementById("sendButton");
-
 const buttons = document.querySelectorAll(".btn-secondary"); // Select all secondary buttons
 
 // Function to send the button ID
