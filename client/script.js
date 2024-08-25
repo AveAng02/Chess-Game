@@ -14,15 +14,6 @@ function sendButtonId(buttonId) {
   }
 }
 
-// Add click event listener to the send button
-sendButton.addEventListener("click", () => {
-  const message = messageInput.value;
-  if (message) {
-    ws.send(message); // Send the chat message
-    messageInput.value = ""; // Clear the input field
-  }
-});
-
 // Add click event listener to all secondary buttons
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
