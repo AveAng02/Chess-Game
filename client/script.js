@@ -1,6 +1,6 @@
-const ws = new WebSocket("ws://localhost:8080"); // Replace with your server address and port
+const ws = new WebSocket("ws://localhost:8080"); 
 
-const buttons = document.querySelectorAll(".btn-secondary"); // Select all secondary buttons
+const buttons = document.querySelectorAll(".btn-secondary");
 
 // Function to send the button ID
 function sendButtonId(buttonId) {
@@ -15,11 +15,11 @@ function sendButtonId(buttonId) {
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
     const buttonId = button.id; // Get the button ID
-    sendButtonId(buttonId); // Send the button ID to the server
+    sendButtonId(buttonId); // Send the button ID 
   });
 });
 
-// Handle WebSocket events (optional)
+
 ws.onopen = () => {
   console.log("WebSocket connection opened!");
 };

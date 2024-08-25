@@ -11,8 +11,6 @@ async def handle_connection(websocket, path):
             continue
 
         print(message)
-        # data = json.loads(message)
-        # print(f"Received message: {data['text']}")
         await websocket.send(json.dumps({'text': 'Server received your message'}))
 
 async def main():
