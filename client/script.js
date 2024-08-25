@@ -1,23 +1,49 @@
-const socket = new WebSocket('ws://localhost:8000');
+const ws = new WebSocket("ws://localhost:8080"); // Replace with your server address and port
 
-socket.onopen = () => {
-    console.log('WebSocket connection opened');
-};
+const messageInput = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
 
-socket.onmessage = (event) => {
-    const message = JSON.parse(event.data);
-    const messagesDiv = document.getElementById('messages');
-    messagesDiv.innerHTML += `<p>${message.text}</p>`;
-};
+const buttons = document.querySelectorAll(".btn-secondary"); // Select all secondary buttons
 
-socket.onerror = (error) => {
-    console.error('WebSocket error:', error);
-};
+// Function to send the button ID
+function sendButtonId(buttonId) {
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(buttonId);
+  } else {
+    console.error("WebSocket connection not open!");
+  }
+}
 
-const sendButton = document.getElementById('sendButton');
-sendButton.addEventListener('click', () => {
-    const messageInput = document.getElementById('messageInput');
-    const message = messageInput.value;
-    socket.send(JSON.stringify({ text: message }));
-    messageInput.value = '';
+// Add click event listener to the send button
+sendButton.addEventListener("click", () => {
+  const message = messageInput.value;
+  if (message) {
+    ws.send(message); // Send the chat message
+    messageInput.value = ""; // Clear the input field
+  }
 });
+
+// Add click event listener to all secondary buttons
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const buttonId = button.id; // Get the button ID
+    sendButtonId(buttonId); // Send the button ID to the server
+  });
+});
+
+// Handle WebSocket events (optional)
+ws.onopen = () => {
+  console.log("WebSocket connection opened!");
+};
+
+ws.onmessage = (event) => {
+  console.log("Received message: ", event.data);
+};
+
+ws.onerror = (error) => {
+  console.error("WebSocket error: ", error);
+};
+
+ws.onclose = () => {
+  console.log("WebSocket connection closed!");
+};
