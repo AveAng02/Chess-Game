@@ -2,7 +2,8 @@
 import json
 from websockets.asyncio.server import broadcast
 
-def cheack_move_legality(board_pos_id, move_pos_id):
+# this check if the move is possible or legal in nature
+def cheack_move_legality(session, player_id, board_pos_id, command):
     return True # todo
 
 def broadcase_move(sktlst, str):

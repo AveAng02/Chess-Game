@@ -20,7 +20,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const movesTiles = document.querySelectorAll('.moves > div');
 
   const moveCellText = [
-    "TL", "T", "TR",
+    "FL", "F", "FR",
     "L", "", "R",
     "BL", "B", "BR"
   ];

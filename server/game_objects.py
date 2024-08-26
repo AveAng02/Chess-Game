@@ -1,14 +1,141 @@
 
+class piece:
+    def __init__(self, id, row, col):
+        self.id = id
+        self.row = row
+        self.col = col
+
+    def get_current_pos(self):
+        return self.row, self.col
+
+    def set_new_pos(self, row, col):
+        self.row = row
+        self.col = col
+
+    def is_at(self, row, col):
+        if self.row == row and self.col == col:
+            return True
+        return False
+
+class pawn(piece):
+    def __init__(self, id, row, col):
+        super().__init__(id, row, col)
+        self.name = 'P' + str(id)
+
+    def is_possible_move(self, command):
+        if command == 'L':
+            temp_row = self.row - 1
+            temp_col = self.col
+        elif command == 'R':
+            temp_row = self.row + 1
+            temp_col = self.col
+        elif command == 'F':
+            temp_row = self.row
+            temp_col = self.col - 1
+        elif command == 'B':
+            temp_row = self.row
+            temp_col = self.col + 1
+        else:
+            return False
+
+        # checking if move is possible
+        if temp_col in range(1, 6) and temp_row in range(1, 6):
+            return True
+        else:
+            return False
+
+class hero1(piece):
+    def __init__(self, id, row, col):
+        super().__init__(id, row, col)
+        self.name = 'H1' + str(id)
+
+    def is_possible_move(self, command):
+        if command == 'L':
+            temp_row = self.row - 2
+            temp_col = self.col
+        elif command == 'R':
+            temp_row = self.row + 2
+            temp_col = self.col
+        elif command == 'F':
+            temp_row = self.row
+            temp_col = self.col - 2
+        elif command == 'B':
+            temp_row = self.row
+            temp_col = self.col + 2
+        else:
+            return False
+
+        # checking if move is possible
+        if temp_col in range(1, 6) and temp_row in range(1, 6):
+            return True
+        else:
+            return False
+
+class hero2(piece):
+    def __init__(self, id, row, col):
+        super().__init__(id, row, col)
+        self.name = 'H2' + str(id)
+
+    def is_possible_move(self, command):
+        if command == 'FL':
+            temp_row = self.row - 2
+            temp_col = self.col - 2
+        elif command == 'FR':
+            temp_row = self.row - 2
+            temp_col = self.col + 2
+        elif command == 'BL':
+            temp_row = self.row + 2
+            temp_col = self.col - 2
+        elif command == 'BR':
+            temp_row = self.row + 2
+            temp_col = self.col + 2
+        else:
+            return False
+
+        # checking if move is possible
+        if temp_col in range(1, 6) and temp_row in range(1, 6):
+            return True
+        else:
+            return False
+
 class player:
     def __init__(self, id, connection):
         self.id = id
         self.connection = connection
+        self.piecelist = []
+        self.piecelist.append(pawn(1, 1, 1))
+        self.piecelist.append(hero1(1, 1, 2))
+        self.piecelist.append(hero2(1, 1, 3))
+        self.piecelist.append(pawn(2, 1, 4))
+        self.piecelist.append(pawn(3, 1, 5))
 
+    def add_piece(self, new_piece):
+        self.piecelist.append(new_piece)
+
+    def remove_piece(self, piece_id):
+        for p in piecelist:
+            if p.id == piece_id:
+                piecelist.remove(p)
+
+    def is_possible_move(self, row, col, command):
+        for pc in piecelist:
+            if pc.is_at(row, col):
+                return pc.is_possible_move(command)
+        return False
+        
 
 class checkerBoard:
     def __init__(self):
         # Initialize a 5x5 board with None representing empty spaces
-        self.board = [["  " for _ in range(5)] for _ in range(5)]
+        self.board = [['00' for _ in range(5)] for _ in range(5)]
+
+    def addPlayer0(self, player):
+        for i in range(0, 5):
+            self.board[0][i] = player.piecelist[i].name
+
+    def addPlayer1(self, player):
+        for i in range(0, 5):
+            self.board[4][i] = player.piecelist[i].name
 
     def get_current_state(self):
         return board
@@ -16,25 +143,37 @@ class checkerBoard:
     def update_game_state(self, move_str):
         print('gamestate is updated with the move ' + move_str)
 
+    def print_board(self):
+        for cells in self.board:
+            for i in cells:
+                print(i, end = ' ')
+            print('')
+
 
 class session:
     def __init__(self, player, checkerboard):
         self.checkerboard = checkerboard
+        # ading player 0 to session
         self.playerlist = set()
         self.playerlist.add(player)
         self.socketlist = set()
         self.socketlist.add(player.connection)
+        # adding player 0 to checkerboard
+        self.checkerboard.addPlayer0(player)
         self.player_turn_state = 'player_0_turn'
         self.game_lifetime_state = 'waiting_for_player_1'
-        print('waiting_for_player_1')
-
-        print(checkerboard.board)
+        print(self.game_lifetime_state)
+        self.checkerboard.print_board()
 
     def add_player(self, player):
+        # ading player 0 to session
         self.playerlist.add(player)
         self.socketlist.add(player.connection)
+        # adding player 1 to checkerboard
+        self.checkerboard.addPlayer1(player)
         self.game_lifetime_state = 'waiting_for_start_button'
-        print('waiting_for_start_button')
+        print(self.game_lifetime_state)
+        self.checkerboard.print_board()
 
     def remove_player(self, websocket):
         pass
