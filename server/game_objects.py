@@ -13,8 +13,8 @@ class checkerBoard:
     def get_current_state(self):
         return board
 
-    def update_game_state(self, event):
-        pass
+    def update_game_state(self, move_str):
+        print('gamestate is updated with the move ' + move_str)
 
 
 class session:
@@ -24,12 +24,9 @@ class session:
         self.playerlist.add(player)
         self.socketlist = set()
         self.socketlist.add(player.connection)
-        self.player0Turn = True
+        self.player_turn_state = 'player_0_turn'
 
-        for i in checkerboard.board:
-            for j in i:
-                print(j, end='')
-            print('')
+        print(checkerboard.board)
 
     def add_player(self, player):
         self.playerlist.add(player)

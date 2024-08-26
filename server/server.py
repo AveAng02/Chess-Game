@@ -27,6 +27,14 @@ def get_user_id(websocket):
             return i
     return -1
 
+def get_player_id(websocket, session):
+    soclst = list(session.socketlist)
+    if soclst[0] == websocket:
+        return 0
+    if soclst[1] == websocket:
+        return 1
+    return -1
+
 def users_event():
     return json.dumps({"type": "users", "count": len(USERS)})
 
@@ -40,16 +48,15 @@ async def counter(websocket):
         # making sure the connection is registered or not
         if not is_currect_user(websocket):
             # register the user if not registered
-            print(number_of_players)
-            # creating a new session with 2 users
             if number_of_players % 2 == 0:
+                # creating a new session with 2 users
                 USERS.append(session(player(0, websocket), checkerBoard()))
             else:
                 # add to the last session
                 USERS[-1].add_player(player(1, websocket)) 
             
             number_of_players = number_of_players + 1
-            print(len(USERS))
+            print(number_of_players)
         
         # if registered
         temp_user_id = get_user_id(websocket)
@@ -60,8 +67,10 @@ async def counter(websocket):
         async for message in websocket:
             event = json.loads(message)
             print(event)
-            VALUE = game_update(event)
+            player_id = get_player_id(websocket, USERS[temp_user_id])
+            VALUE = game_update(event, USERS[temp_user_id], player_id)
             broadcast(USERS[temp_user_id].socketlist, game_history_loggging_event())
+            print(player_id, end = ' ')
             print(VALUE)
 
     finally:
