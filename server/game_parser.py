@@ -36,12 +36,17 @@ def move_parcer(dict):
         return "Working on it"
 
 # parsing game events
-def game_update(event, session, player_id):
-    board_pos_str, board_pos_row, board_pos_col = board_parser(event['boardPosition'])
-    move_pos_str = move_parcer(event['movePosition'])
-    print('before : ' + session.player_turn_state)
-    taking_turns_state_machine(session, player_id, board_pos_str, move_pos_str)
-    print('after : ' + session.player_turn_state)
+def json_parser(event, session, player_id):
+    if session.game_lifetime_state != 'continue_game_subrouting':
+        if event['event_type'] == 'session_life_event':
+            game_progression_state_machine(session, event)
+    else:
+        if event['event_type'] == 'game_life_event':
+            board_pos_str, board_pos_row, board_pos_col = board_parser(event['boardPosition'])
+            move_pos_str = move_parcer(event['movePosition'])
+            print('before : ' + session.player_turn_state)
+            taking_turns_state_machine(session, player_id, board_pos_str, move_pos_str)
+            print('after : ' + session.player_turn_state)
 
 
 # this function is the state machine for interchange of moves 
@@ -74,3 +79,12 @@ def taking_turns_state_machine(session, player_id, board_pos_id, move_pos_id):
                 check_if_game_over()
 
 
+def game_progression_state_machine(session, event):
+    if session.game_lifetime_state == 'game_over':
+        print('wait_for_start_button')
+        session.game_lifetime_state = 'waiting_for_start_button'
+
+    if session.game_lifetime_state == 'waiting_for_start_button':
+        if event['action'] == 'start_game_button_pressed':
+            print('continue_game_subrouting')
+            session.game_lifetime_state = 'continue_game_subrouting'

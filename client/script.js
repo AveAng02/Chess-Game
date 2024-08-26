@@ -100,6 +100,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const movePosition = await waitForMoveClick();
 
       websocket.send(JSON.stringify({
+        event_type: "game_life_event",
         boardPosition: boardPosition,
         movePosition: movePosition
       }));
@@ -117,4 +118,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Start handling clicks
   handleClicks();
+
+  document.querySelector(".start_game_button").addEventListener("click", () => {
+    websocket.send(JSON.stringify({ event_type: "session_life_event",
+                                    action: "start_game_button_pressed" }));
+  });
 });

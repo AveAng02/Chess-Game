@@ -12,4 +12,5 @@ def send_error_notification(player_id):
     print('send error notification to ' + str(player_id))
 
 def check_if_game_over():
+    # update self.game_lifetime_state to 'game_over'
     return False # todo

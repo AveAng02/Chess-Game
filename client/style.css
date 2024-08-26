@@ -19,8 +19,14 @@ body {
     cursor: pointer;
     user-select: none;
 }
-.minus {
+.start_game_button {
     color: red;
+    margin: 0.25rem;
+    padding: 0.25rem;
+    border: medium solid;
+    font-size: 2em;
+    display: flex;
+    justify-content: center;
 }
 .plus {
     color: green;

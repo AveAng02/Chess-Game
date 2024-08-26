@@ -5,8 +5,8 @@ import datetime
 import random
 from websockets.asyncio.server import broadcast, serve
 
-from game_parser import game_update
 from game_objects import checkerBoard, session, player
+from game_parser import json_parser
 
 logging.basicConfig()
 
@@ -61,8 +61,9 @@ async def counter(websocket):
         # Manage state changes
         async for message in websocket:
             event = json.loads(message)
+            print(event)
             player_id = get_player_id(websocket, USERS[temp_user_id])
-            game_update(event, USERS[temp_user_id], player_id)
+            json_parser(event, USERS[temp_user_id], player_id)
 
     finally:
         # Unregister user

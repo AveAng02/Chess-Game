@@ -25,13 +25,16 @@ class session:
         self.socketlist = set()
         self.socketlist.add(player.connection)
         self.player_turn_state = 'player_0_turn'
-        self.game_lifetime_state = 'continue_game'
+        self.game_lifetime_state = 'waiting_for_player_1'
+        print('waiting_for_player_1')
 
         print(checkerboard.board)
 
     def add_player(self, player):
         self.playerlist.add(player)
         self.socketlist.add(player.connection)
+        self.game_lifetime_state = 'waiting_for_start_button'
+        print('waiting_for_start_button')
 
     def remove_player(self, websocket):
         pass
