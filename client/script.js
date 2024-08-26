@@ -31,14 +31,16 @@ window.addEventListener("DOMContentLoaded", () => {
   websocket.onmessage = ({ data }) => {
     const event = JSON.parse(data);
     switch (event.type) {
-      case "value":
-        document.querySelector(".value").textContent = event.value[0];
+      case "game_history":
+        // Updating the +- score
+        // document.querySelector(".value").textContent = event.value[0];
+
         const message = document.createElement("li");
-        const content = document.createTextNode(event.value[1]);
+        const content = document.createTextNode(event.value);
         message.appendChild(content);
         messages.appendChild(message);
         break;
-      case "users":
+      case "users": // TODO: make players
         const users = `${event.count} user${event.count == 1 ? "" : "s"}`;
         document.querySelector(".users").textContent = users;
         break;
