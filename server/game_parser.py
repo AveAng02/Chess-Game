@@ -11,8 +11,24 @@ def piece_parcer(dict):
     return position
 
 def move_parcer(dict):
-    if dict['col'] == 1 or dict['row'] == 1:
+    number = dict['col'] * 10 + dict['row']
+
+    if number == 11:
         return "TL"
+    if number == 21:
+        return "T"
+    if number == 31:
+        return "TR"
+    if number == 12:
+        return "L"
+    if number == 32:
+        return "R"
+    if number == 13:
+        return "BL"
+    if number == 23:
+        return "B"
+    if number == 33:
+        return "BR"
     else:
         return "Working on it"
 
