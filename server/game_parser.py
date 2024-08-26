@@ -42,7 +42,6 @@ def game_update(event, session, player_id):
     print('before : ' + session.player_turn_state)
     taking_turns_state_machine(session, player_id, board_pos_str, move_pos_str)
     print('after : ' + session.player_turn_state)
-    return board_pos_str + '  ' + move_pos_str
 
 
 # this function is the state machine for interchange of moves 
@@ -55,11 +54,10 @@ def taking_turns_state_machine(session, player_id, board_pos_id, move_pos_id):
             else:
                 # now we are in state A
                 session.player_turn_state = 'player_1_turn'
-                # for now it get's a string
-                # however it will need to go through a lot of processing
+                # string for boradcasting the move
                 str = board_pos_id + ' ' + move_pos_id # todo
                 session.checkerboard.update_game_state(str)
-                broadcase_move()
+                broadcase_move(session.socketlist, str)
                 check_if_game_over()
     
     if session.player_turn_state == 'player_1_turn':
@@ -69,11 +67,10 @@ def taking_turns_state_machine(session, player_id, board_pos_id, move_pos_id):
             else:
                 # now we are in state A
                 session.player_turn_state = 'player_0_turn'
-                # for now it get's a string
-                # however it will need to go through a lot of processing
+                # string for boradcasting the move
                 str = board_pos_id + ' ' + move_pos_id # todo
                 session.checkerboard.update_game_state(str)
-                broadcase_move()
+                broadcase_move(session.socketlist, str)
                 check_if_game_over()
 
 

@@ -25,6 +25,7 @@ class session:
         self.socketlist = set()
         self.socketlist.add(player.connection)
         self.player_turn_state = 'player_0_turn'
+        self.game_lifetime_state = 'continue_game'
 
         print(checkerboard.board)
 

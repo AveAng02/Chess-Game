@@ -38,10 +38,6 @@ def get_player_id(websocket, session):
 def users_event():
     return json.dumps({"type": "users", "count": len(USERS)})
 
-def game_history_loggging_event():
-    print('sending history')
-    return json.dumps({"type": "game_history", "value": VALUE})
-
 async def counter(websocket):
     global USERS, VALUE, number_of_players
     try:
@@ -60,18 +56,13 @@ async def counter(websocket):
         
         # if registered
         temp_user_id = get_user_id(websocket)
+        # updating the number of users currently playing
         broadcast(USERS[temp_user_id].socketlist, users_event())
-        # Send current state to user
-        await websocket.send(game_history_loggging_event())
         # Manage state changes
         async for message in websocket:
             event = json.loads(message)
-            print(event)
             player_id = get_player_id(websocket, USERS[temp_user_id])
-            VALUE = game_update(event, USERS[temp_user_id], player_id)
-            broadcast(USERS[temp_user_id].socketlist, game_history_loggging_event())
-            print(player_id, end = ' ')
-            print(VALUE)
+            game_update(event, USERS[temp_user_id], player_id)
 
     finally:
         # Unregister user
