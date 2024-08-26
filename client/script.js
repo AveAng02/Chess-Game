@@ -16,9 +16,15 @@ window.addEventListener("DOMContentLoaded", () => {
     websocket.send(JSON.stringify({ action: "plus" }));
   });
 
-  document.querySelectorAll(".chessboard > div").forEach(cell => {
+  document.querySelectorAll(".chessboard > div").forEach((cell, index) => {
+    const row = Math.floor(index / 5) + 1; // Calculate row index (1-based)
+    const col = (index % 5) + 1; // Calculate column index (1-based)
+
     cell.addEventListener("click", () => {
-      websocket.send(JSON.stringify({ action: "button" }));
+      websocket.send(JSON.stringify({
+        action: "button",
+        position: { row: row, col: col }
+      }));
     });
   });
 

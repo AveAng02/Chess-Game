@@ -37,7 +37,7 @@ async def counter(websocket):
                 VALUE[1] = "plus " + datetime.datetime.utcnow().isoformat()
                 broadcast(USERS, value_event())
             elif event["action"] == "button":
-                print('button')
+                print(event["position"])
             else:
                 logging.error("unsupported event: %s", event)
 
