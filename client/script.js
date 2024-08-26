@@ -55,50 +55,66 @@ window.addEventListener("DOMContentLoaded", () => {
   // ACTIONS
   // Loop through each cell and assign the corresponding text
   // Get all the div elements inside the chessboard
+  // Function to wait for a chessboard click and return the position
+  function waitForChessboardClick() {
+    return new Promise((resolve) => {
+      chessboardCells.forEach((cell, index) => {
+        const row = Math.floor(index / 5) + 1;
+        const col = (index % 5) + 1;
+
+        const clickHandler = () => {
+          resolve({ row, col });
+
+          // Remove all chessboard event listeners after the first click
+          chessboardCells.forEach((c) => c.removeEventListener('click', clickHandler));
+        };
+
+        cell.addEventListener('click', clickHandler);
+      });
+    });
+  }
+
+  // Function to wait for a move tile click and return the position
+  function waitForMoveClick() {
+    return new Promise((resolve) => {
+      movesTiles.forEach((cell, index) => {
+        const row = Math.floor(index / 3) + 1;
+        const col = (index % 3) + 1;
+
+        const clickHandler = () => {
+          resolve({ row, col });
+
+          // Remove all move tile event listeners after the first click
+          movesTiles.forEach((c) => c.removeEventListener('click', clickHandler));
+        };
+
+        cell.addEventListener('click', clickHandler);
+      });
+    });
+  }
+
+  // Main function to handle the click sequence
+  async function handleClicks() {
+    while (true) {  // Loop indefinitely to handle multiple click sequences
+      const boardPosition = await waitForChessboardClick();
+      const movePosition = await waitForMoveClick();
+
+      websocket.send(JSON.stringify({
+        boardPosition: boardPosition,
+        movePosition: movePosition
+      }));
+    }
+  }
+
+  // Initialize the board and moves with their text content
   chessboardCells.forEach((cell, index) => {
     cell.textContent = cellTexts[index];
   });
 
-  // Add event listeners for each cell to handle clicks
-  chessboardCells.forEach((cell, index) => {
-    cell.addEventListener('click', () => {
-    const row = Math.floor(index / 5) + 1; // Calculate row index (1-based)
-    const col = (index % 5) + 1; // Calculate column index (1-based)
-
-      websocket.send(JSON.stringify({
-        action: "board_button",
-        position: { row: row, col: col }
-      }));
-    });
-  });
-
-  // Get all the div elements inside the moves box
   movesTiles.forEach((cell, index) => {
     cell.textContent = moveCellText[index];
   });
 
-  // Add event listeners for each cell to handle clicks
-  movesTiles.forEach((cell, index) => {
-    cell.addEventListener('click', () => {
-    const row = Math.floor(index / 3) + 1; // Calculate row index (1-based)
-    const col = (index % 3) + 1; // Calculate column index (1-based)
-
-      websocket.send(JSON.stringify({
-        action: "move_button",
-        position: { row: row, col: col }
-      }));
-    });
-  });
-
-  // for pressing plus button
-  /*
-  document.querySelector(".minus").addEventListener("click", () => {
-    websocket.send(JSON.stringify({ action: "minus" }));
-  });
-
-  // for pressing minus button
-  document.querySelector(".plus").addEventListener("click", () => {
-    websocket.send(JSON.stringify({ action: "plus" }));
-  });
-  */
+  // Start handling clicks
+  handleClicks();
 });

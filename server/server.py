@@ -5,7 +5,7 @@ import datetime
 import random
 from websockets.asyncio.server import broadcast, serve
 
-from game_parser import piece_parcer, move_parcer, game_update
+from game_parser import game_update
 from game_objects import checkerBoard, session, player
 
 logging.basicConfig()
@@ -59,6 +59,7 @@ async def counter(websocket):
         # Manage state changes
         async for message in websocket:
             event = json.loads(message)
+            print(event)
             VALUE = game_update(event)
             broadcast(USERS[temp_user_id].socketlist, game_history_loggging_event())
             print(VALUE)
