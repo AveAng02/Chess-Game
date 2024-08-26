@@ -36,7 +36,7 @@ body {
     width: 400px;
     height: 400px;
     margin: 20px;
-    border: 25px solid #333;
+    border: 50px solid #333;
 }
 .black {
     float: left;
@@ -52,7 +52,34 @@ body {
     float: left;
     width: 80px;
     height: 80px;
-    background-color: #e61717;
+    background-color: #ffffff;
+    font-size:50px;
+    text-align:center;
+    display: table-cell;
+    vertical-align:middle;
+}
+
+.moves {
+    width: 240px;
+    height: 240px;
+    margin: 20px;
+    border: 5px solid #333;
+}
+.brown {
+    float: left;
+    width: 80px;
+    height: 80px;
+    background-color: #9c7d39;
+      font-size:50px;
+    text-align:center;
+    display: table-cell;
+    vertical-align:middle;
+}
+.green {
+    float: left;
+    width: 80px;
+    height: 80px;
+    background-color: #07f72f;
     font-size:50px;
     text-align:center;
     display: table-cell;

@@ -5,7 +5,7 @@ import datetime
 import random
 from websockets.asyncio.server import broadcast, serve
 
-from game_parser import move_parser
+from game_parser import piece_parcer, move_parcer, game_update
 
 logging.basicConfig()
 
@@ -17,6 +17,7 @@ def users_event():
     return json.dumps({"type": "users", "count": len(USERS)})
 
 def game_history_loggging_event():
+    print('sending history')
     return json.dumps({"type": "game_history", "value": VALUE})
 
 async def counter(websocket):
@@ -37,21 +38,9 @@ async def counter(websocket):
         # Manage state changes
         async for message in websocket:
             event = json.loads(message)
-            '''
-            if event["action"] == "minus":
-                VALUE = "minus " + datetime.datetime.utcnow().isoformat()
-                broadcast(USERS, value_event())
-            elif event["action"] == "plus":
-                VALUE = "plus " + datetime.datetime.utcnow().isoformat()
-                broadcast(USERS, value_event())
-            '''
-            if event["action"] == "button":
-                # Broadcasting the move to everyone
-                VALUE = move_parser(event["position"])
-                broadcast(USERS, game_history_loggging_event())
-                print(VALUE)
-            else:
-                logging.error("unsupported event: %s", event)
+            VALUE = game_update(event)
+            broadcast(USERS, game_history_loggging_event())
+            print(VALUE)
 
     finally:
         # Unregister user
