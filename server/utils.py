@@ -35,6 +35,17 @@ def broadcaset_board(sktlst, str):
 def send_error_notification(player_id):
     print('send error notification to ' + str(player_id))
 
-def check_if_game_over():
-    # update self.game_lifetime_state to 'game_over'
-    return False # todo
+def check_if_game_over(session):
+    plrlst = list(session.playerlist)
+    is_over = False
+
+    if len(plrlst[0].piecelist) == 0:
+        is_over = True
+        peint('declare Player 1 as winner')
+        session.game_lifetime_state = 'game_over'
+    elif len(plrlst[1].piecelist) == 0:
+        is_over = True
+        peint('declare Player 0 as winner')
+        session.game_lifetime_state = 'game_over'
+
+    return is_over # todo

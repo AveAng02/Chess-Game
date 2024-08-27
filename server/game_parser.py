@@ -60,7 +60,7 @@ def taking_turns_state_machine(session, player_id, board_pos_row, board_pos_col,
                 session.checkerboard.print_board()
                 broadcase_move(session.socketlist, str)
                 broadcaset_board(session.socketlist, session.get_current_state())
-                check_if_game_over()
+                check_if_game_over(session)
     
     if session.player_turn_state == 'player_1_turn':
         if player_id == 1:
@@ -75,7 +75,7 @@ def taking_turns_state_machine(session, player_id, board_pos_row, board_pos_col,
                 session.checkerboard.print_board()
                 broadcase_move(session.socketlist, str)
                 broadcaset_board(session.socketlist, session.get_current_state())
-                check_if_game_over()
+                check_if_game_over(session)
 
 
 def game_progression_state_machine(session, event):
