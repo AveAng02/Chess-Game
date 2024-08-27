@@ -10,6 +10,9 @@ def cheack_move_legality(session, player_id, board_pos_row, board_pos_col, comma
 def broadcase_move(sktlst, str):
     broadcast(sktlst, json.dumps({"type": "game_history", "value": str}))
 
+def broadcaset_board():
+    pass
+    
 def send_error_notification(player_id):
     print('send error notification to ' + str(player_id))
 

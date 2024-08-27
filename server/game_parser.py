@@ -61,7 +61,7 @@ def taking_turns_state_machine(session, player_id, board_pos_row, board_pos_col,
                 session.player_turn_state = 'player_1_turn'
                 # string for boradcasting the move
                 str = board_pos_id + ' ' + move_pos_id # todo
-                session.checkerboard.update_game_state(str)
+                session.update_game_state(str, player_id, move_pos_id, board_pos_row, board_pos_col)
                 session.checkerboard.print_board()
                 broadcase_move(session.socketlist, str)
                 check_if_game_over()
@@ -75,7 +75,7 @@ def taking_turns_state_machine(session, player_id, board_pos_row, board_pos_col,
                 session.player_turn_state = 'player_0_turn'
                 # string for boradcasting the move
                 str = board_pos_id + ' ' + move_pos_id # todo
-                session.checkerboard.update_game_state(str)
+                session.update_game_state(str, player_id, move_pos_id, board_pos_row, board_pos_col)
                 session.checkerboard.print_board()
                 broadcase_move(session.socketlist, str)
                 check_if_game_over()
