@@ -1,4 +1,6 @@
 
+from utils import broadcaset_board
+
 class piece:
     def __init__(self, id, row, col):
         self.id = id
@@ -207,6 +209,7 @@ class session:
         self.game_lifetime_state = 'waiting_for_player_1'
         print(self.game_lifetime_state)
         self.checkerboard.print_board()
+        broadcaset_board(self.socketlist, self.get_current_state())
 
     def add_player(self, player):
         # adding peices to player 1
@@ -223,9 +226,14 @@ class session:
         self.game_lifetime_state = 'waiting_for_start_button'
         print(self.game_lifetime_state)
         self.checkerboard.print_board()
+        broadcaset_board(self.socketlist, self.get_current_state())
 
     def get_current_state(self):
-        return board
+        txt = ""
+        for obj in self.checkerboard.board:
+            for i in obj:
+                txt = txt + " " + i
+        return txt
 
     def update_game_state(self, move_str, player_id, command, board_pos_row, board_pos_col):
         player = list(self.playerlist)[player_id]

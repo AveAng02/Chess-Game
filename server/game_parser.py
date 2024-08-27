@@ -1,18 +1,13 @@
 
-from utils import cheack_move_legality, broadcase_move
+from utils import cheack_move_legality, broadcase_move, broadcaset_board
 from utils import send_error_notification, check_if_game_over
 
-## Maskes sure all the commands are in place
-## Let us define an array that stores and communicates 
-## all possibles states of our game
-
-# Simple move parser
 # takes a dictionary in the form of {'row': 3, 'col': 5}
-# returns move in string
 def board_parser(dict):
     position = str(chr(dict['col'] + 64)) + str(dict['row'])
     return position, dict['row'], dict['col']
 
+# takes a dictionary in the form of {'row': 3, 'col': 5}
 def move_parcer(dict):
     number = dict['col'] * 10 + dict['row']
 
@@ -64,6 +59,7 @@ def taking_turns_state_machine(session, player_id, board_pos_row, board_pos_col,
                 session.update_game_state(str, player_id, move_pos_id, board_pos_row, board_pos_col)
                 session.checkerboard.print_board()
                 broadcase_move(session.socketlist, str)
+                broadcaset_board(session.socketlist, session.get_current_state())
                 check_if_game_over()
     
     if session.player_turn_state == 'player_1_turn':
@@ -78,6 +74,7 @@ def taking_turns_state_machine(session, player_id, board_pos_row, board_pos_col,
                 session.update_game_state(str, player_id, move_pos_id, board_pos_row, board_pos_col)
                 session.checkerboard.print_board()
                 broadcase_move(session.socketlist, str)
+                broadcaset_board(session.socketlist, session.get_current_state())
                 check_if_game_over()
 
 

@@ -9,7 +9,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // Array of text content for each chessboard cell
   const chessboardCells = document.querySelectorAll('.chessboard > div');
 
-  const cellTexts = [
+  var cellTexts = [
     "A1", "B1", "C1", "D1", "E1",
     "A2", "B2", "C2", "D2", "E2",
     "A3", "B3", "C3", "D3", "E3",
@@ -30,19 +30,30 @@ window.addEventListener("DOMContentLoaded", () => {
     const event = JSON.parse(data);
     switch (event.type) {
       case "game_history":
-        // Updating the +- score
-        // document.querySelector(".value").textContent = event.value[0];
-
         // Updating the game history log
         const message = document.createElement("li");
         const content = document.createTextNode(event.value);
         message.appendChild(content);
         messages.appendChild(message);
-
-        // Updating the chessboard
-        const indx = (event.value.charAt(0) - 65) * 5 + parseInt(event.value.charAt(1));
-
         break;
+
+      case "board_update":
+        // a string with each word seperated by space 
+        // and only the empty cells maked as None
+        const str = event.value;
+        var arr = str.split(/\s+/).filter(Boolean);
+
+        for (var i = 0; i < data.length; i++){
+          if (arr[i] != "None")
+            cellTexts[i] = arr[i];
+          else
+            cellTexts[i] = " ";
+        }
+        chessboardCells.forEach((cell, index) => {
+          cell.textContent = cellTexts[index];
+        });
+        break;
+      
       case "users": // TODO: make players
         const users = `${event.count} user${event.count == 1 ? "" : "s"}`;
         document.querySelector(".users").textContent = users;
