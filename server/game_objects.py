@@ -23,22 +23,24 @@ class pawn(piece):
         self.name = 'P' + str(id)
 
     def is_possible_move(self, command):
-        if command == 'L':
+        if command == 'F':
             temp_row = self.row - 1
             temp_col = self.col
-        elif command == 'R':
+        elif command == 'B':
             temp_row = self.row + 1
             temp_col = self.col
-        elif command == 'F':
+        elif command == 'L':
             temp_row = self.row
             temp_col = self.col - 1
-        elif command == 'B':
+        elif command == 'R':
             temp_row = self.row
             temp_col = self.col + 1
         else:
             return False
 
         # checking if move is possible
+        print(temp_row)
+        print(temp_col)
         if temp_col in range(1, 6) and temp_row in range(1, 6):
             return True
         else:
@@ -50,22 +52,24 @@ class hero1(piece):
         self.name = 'H1' + str(id)
 
     def is_possible_move(self, command):
-        if command == 'L':
+        if command == 'F':
             temp_row = self.row - 2
             temp_col = self.col
-        elif command == 'R':
+        elif command == 'B':
             temp_row = self.row + 2
             temp_col = self.col
-        elif command == 'F':
+        elif command == 'L':
             temp_row = self.row
             temp_col = self.col - 2
-        elif command == 'B':
+        elif command == 'R':
             temp_row = self.row
             temp_col = self.col + 2
         else:
             return False
 
         # checking if move is possible
+        print(temp_row)
+        print(temp_col)
         if temp_col in range(1, 6) and temp_row in range(1, 6):
             return True
         else:
@@ -93,6 +97,8 @@ class hero2(piece):
             return False
 
         # checking if move is possible
+        print(temp_row)
+        print(temp_col)
         if temp_col in range(1, 6) and temp_row in range(1, 6):
             return True
         else:
@@ -103,11 +109,6 @@ class player:
         self.id = id
         self.connection = connection
         self.piecelist = []
-        self.piecelist.append(pawn(1, 1, 1))
-        self.piecelist.append(hero1(1, 1, 2))
-        self.piecelist.append(hero2(1, 1, 3))
-        self.piecelist.append(pawn(2, 1, 4))
-        self.piecelist.append(pawn(3, 1, 5))
 
     def add_piece(self, new_piece):
         self.piecelist.append(new_piece)
@@ -118,7 +119,7 @@ class player:
                 piecelist.remove(p)
 
     def is_possible_move(self, row, col, command):
-        for pc in piecelist:
+        for pc in self.piecelist:
             if pc.is_at(row, col):
                 return pc.is_possible_move(command)
         return False
@@ -152,6 +153,13 @@ class checkerBoard:
 
 class session:
     def __init__(self, player, checkerboard):
+        # adding pieces to player
+        player.piecelist.append(pawn(1, 1, 1))
+        player.piecelist.append(hero1(1, 1, 2))
+        player.piecelist.append(hero2(1, 1, 3))
+        player.piecelist.append(pawn(2, 1, 4))
+        player.piecelist.append(pawn(3, 1, 5))
+        # adding a board to the session
         self.checkerboard = checkerboard
         # ading player 0 to session
         self.playerlist = set()
@@ -166,7 +174,13 @@ class session:
         self.checkerboard.print_board()
 
     def add_player(self, player):
-        # ading player 0 to session
+        # adding peices to player 1
+        player.piecelist.append(pawn(1, 5, 1))
+        player.piecelist.append(hero1(1, 5, 2))
+        player.piecelist.append(hero2(1, 5, 3))
+        player.piecelist.append(pawn(2, 5, 4))
+        player.piecelist.append(pawn(3, 5, 5))
+        # ading player 1 to session
         self.playerlist.add(player)
         self.socketlist.add(player.connection)
         # adding player 1 to checkerboard
