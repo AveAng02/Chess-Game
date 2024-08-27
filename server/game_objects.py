@@ -163,7 +163,7 @@ class player:
 class checkerBoard:
     def __init__(self):
         # Initialize a 5x5 board with None representing empty spaces
-        self.board = [['00' for _ in range(5)] for _ in range(5)]
+        self.board = [['None' for _ in range(5)] for _ in range(5)]
 
     def addPlayer0(self, player):
         for i in range(0, 5):
@@ -192,8 +192,8 @@ class session:
         player.piecelist.append(pawn(1, 1, 1))
         player.piecelist.append(hero1(1, 1, 2))
         player.piecelist.append(hero2(1, 1, 3))
-        player.piecelist.append(pawn(2, 1, 4))
-        player.piecelist.append(pawn(3, 1, 5))
+        player.piecelist.append(pawn(1, 1, 4))
+        player.piecelist.append(pawn(1, 1, 5))
         # adding a board to the session
         self.checkerboard = checkerboard
         # ading player 0 to session
@@ -210,11 +210,11 @@ class session:
 
     def add_player(self, player):
         # adding peices to player 1
-        player.piecelist.append(pawn(1, 5, 1))
-        player.piecelist.append(hero1(1, 5, 2))
-        player.piecelist.append(hero2(1, 5, 3))
+        player.piecelist.append(pawn(2, 5, 1))
+        player.piecelist.append(hero1(2, 5, 2))
+        player.piecelist.append(hero2(2, 5, 3))
         player.piecelist.append(pawn(2, 5, 4))
-        player.piecelist.append(pawn(3, 5, 5))
+        player.piecelist.append(pawn(2, 5, 5))
         # ading player 1 to session
         self.playerlist.add(player)
         self.socketlist.add(player.connection)
@@ -229,16 +229,32 @@ class session:
 
     def update_game_state(self, move_str, player_id, command, board_pos_row, board_pos_col):
         player = list(self.playerlist)[player_id]
+        opponent = list(self.playerlist)[1 - player_id]
         row = 0
         col = 0
-
+        has_capture = False
+        captured_pce = None
+        # fetching future row and column data
         for pc in player.piecelist:
             if pc.is_at(board_pos_row, board_pos_col):
                 pc.update_pos(command)
                 row, col = pc.get_current_pos()
 
+        # checking opponent team if there is a capture
+        for pc in opponent.piecelist:
+            if pc.is_at(row, col):
+                has_capture = True
+                captured_pce = pc
+
         brd = self.checkerboard.board
-        brd[row - 1][col - 1], brd[board_pos_row - 1][board_pos_col - 1] = brd[board_pos_row - 1][board_pos_col - 1], brd[row - 1][col - 1]
+        if not has_capture:
+            brd[row - 1][col - 1], brd[board_pos_row - 1][board_pos_col - 1] = brd[board_pos_row - 1][board_pos_col - 1], brd[row - 1][col - 1]
+        else:
+            brd[row - 1][col - 1] = brd[board_pos_row - 1][board_pos_col - 1]
+            brd[board_pos_row - 1][board_pos_col - 1] = 'None'
+            opponent.piecelist.remove(captured_pce)
+            print('broadcast capture')
+            print('updated opponent strength ' + str(len(opponent.piecelist)))
 
         print('gamestate is updated with the move ' + move_str) # todo
 
