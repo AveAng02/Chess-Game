@@ -3,11 +3,11 @@
 
 # How to get the system up and running
 ### Using Windows Subsystem for Linux
-> clone the project
-> open a WSL terminal
-> run server.py file
-> open index.html 2 times using Monzilla or Chrome or Edge
-> these 2 clients can play with each other
+1. clone the project
+2. open a WSL terminal
+3. run server.py file
+4. open index.html 2 times using Monzilla or Chrome or Edge
+5. these 2 clients can play with each other
 
 # References
 * https://websockets.readthedocs.io/en/stable/howto/quickstart.html
