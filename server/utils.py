@@ -24,13 +24,25 @@ def cheack_move_legality(session, player_id, board_pos_row, board_pos_col, comma
             if pc.is_at(dest_row, dest_col):
                 state1 = False
 
+    if not state1:
+        temp_set = set()
+        temp_set.add(list(session.socketlist)[player_id])
+        broadcast(temp_set, json.dumps({"type": "notification", "value": "Invalid move play again."}))
+    else:
+        temp_set = set()
+        temp_set.add(list(session.socketlist)[player_id])
+        broadcast(temp_set, json.dumps({"type": "notification", "value": " "}))
+    
     return state1 # todo
 
-def broadcase_move(sktlst, str):
+def broadcast_move(sktlst, str):
     broadcast(sktlst, json.dumps({"type": "game_history", "value": str}))
 
-def broadcaset_board(sktlst, str):
+def broadcast_board(sktlst, str):
     broadcast(sktlst, json.dumps({"type": "board_update", "value": str}))
+
+def broadcast_game_state(sktlst, str):
+    broadcast(sktlst, json.dumps({"type": "state_box", "value": str}))
 
 def send_error_notification(player_id):
     print('send error notification to ' + str(player_id))
@@ -41,11 +53,11 @@ def check_if_game_over(session):
 
     if len(plrlst[0].piecelist) == 0:
         is_over = True
-        peint('declare Player 1 as winner')
+        broadcast_game_state(session.socketlist, 'Player 1 Won')
         session.game_lifetime_state = 'game_over'
     elif len(plrlst[1].piecelist) == 0:
         is_over = True
-        peint('declare Player 0 as winner')
+        broadcast_game_state(session.socketlist, 'Player 0 Won')
         session.game_lifetime_state = 'game_over'
 
     is_over = (random.randrange(0, 5) < 3)
@@ -54,5 +66,6 @@ def check_if_game_over(session):
 
     if is_over:
         session.game_lifetime_state = 'game_over'
-
+        broadcast_game_state(session.socketlist, 'Game Over')
+    
     return is_over # todo

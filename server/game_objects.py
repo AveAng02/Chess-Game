@@ -1,5 +1,5 @@
 
-from utils import broadcaset_board
+from utils import broadcast_board, broadcast_game_state
 
 class piece:
     def __init__(self, id, row, col):
@@ -191,11 +191,11 @@ class checkerBoard:
 class session:
     def __init__(self, player, checkerboard):
         # adding pieces to player
-        player.piecelist.append(pawn(1, 1, 1))
-        player.piecelist.append(hero1(1, 1, 2))
-        player.piecelist.append(hero2(1, 1, 3))
-        player.piecelist.append(pawn(1, 1, 4))
-        player.piecelist.append(pawn(1, 1, 5))
+        player.piecelist.append(pawn(0, 1, 1))
+        player.piecelist.append(hero1(0, 1, 2))
+        player.piecelist.append(hero2(0, 1, 3))
+        player.piecelist.append(pawn(0, 1, 4))
+        player.piecelist.append(pawn(0, 1, 5))
         # adding a board to the session
         self.checkerboard = checkerboard
         # ading player 0 to session
@@ -207,26 +207,28 @@ class session:
         self.checkerboard.addPlayer0(player)
         self.player_turn_state = 'player_0_turn'
         self.game_lifetime_state = 'waiting_for_player_1'
+        broadcast_game_state(self.socketlist, 'Waiting for Player 1')
         print(self.game_lifetime_state)
         self.checkerboard.print_board()
-        broadcaset_board(self.socketlist, self.get_current_state())
+        broadcast_board(self.socketlist, self.get_current_state())
 
     def add_player(self, player):
         # adding peices to player 1
-        player.piecelist.append(pawn(2, 5, 1))
-        player.piecelist.append(hero1(2, 5, 2))
-        player.piecelist.append(hero2(2, 5, 3))
-        player.piecelist.append(pawn(2, 5, 4))
-        player.piecelist.append(pawn(2, 5, 5))
+        player.piecelist.append(pawn(1, 5, 1))
+        player.piecelist.append(hero1(1, 5, 2))
+        player.piecelist.append(hero2(1, 5, 3))
+        player.piecelist.append(pawn(1, 5, 4))
+        player.piecelist.append(pawn(1, 5, 5))
         # ading player 1 to session
         self.playerlist.add(player)
         self.socketlist.add(player.connection)
         # adding player 1 to checkerboard
         self.checkerboard.addPlayer1(player)
         self.game_lifetime_state = 'waiting_for_start_button'
+        broadcast_game_state(self.socketlist, 'Waiting for Start Button')
         print(self.game_lifetime_state)
         self.checkerboard.print_board()
-        broadcaset_board(self.socketlist, self.get_current_state())
+        broadcast_board(self.socketlist, self.get_current_state())
 
     def get_current_state(self):
         txt = ""

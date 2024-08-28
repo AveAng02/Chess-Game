@@ -7,7 +7,10 @@ body {
     display: flex;
     justify-content: center;
 }
-.notification_box {
+.notification {
+    font-size: 1em;
+}
+.state_box {
     color: rgb(38, 0, 255);
     border: medium solid;
     font-size: 2em;
@@ -16,6 +19,7 @@ body {
     width: 500px;
     height: 80px;
     margin: 2rem;
+    vertical-align:middle;
 }
 .button {
     line-height: 1;
@@ -46,15 +50,15 @@ body {
 }
 
 .chessboard {
-    width: 400px;
-    height: 400px;
+    width: 300px;
+    height: 300px;
     margin: 20px;
-    border: 50px solid #333;
+    border: 10px solid #333;
 }
 .black {
     float: left;
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     background-color: #999;
     font-size:25px;
     text-align:center;
@@ -63,8 +67,8 @@ body {
 }
 .white {
     float: left;
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     background-color: #ffffff;
     font-size:25px;
     text-align:center;
@@ -73,27 +77,27 @@ body {
 }
 
 .moves {
-    width: 240px;
-    height: 240px;
+    width: 120px;
+    height: 120px;
     margin: 20px;
     border: 5px solid #333;
 }
 .brown {
     float: left;
-    width: 80px;
-    height: 80px;
+    width: 40px;
+    height: 40px;
     background-color: #9c7d39;
-      font-size:50px;
+      font-size:20px;
     text-align:center;
     display: table-cell;
     vertical-align:middle;
 }
 .green {
     float: left;
-    width: 80px;
-    height: 80px;
+    width: 40px;
+    height: 40px;
     background-color: #07f72f;
-    font-size:50px;
+    font-size:20px;
     text-align:center;
     display: table-cell;
     vertical-align:middle;

@@ -37,6 +37,18 @@ window.addEventListener("DOMContentLoaded", () => {
         messages.appendChild(message);
         break;
 
+      case "state_box":
+        document.querySelector(".state_box").textContent = event.value;
+        break;
+
+      case "state_box":
+        document.querySelector(".state_box").textContent = event.value;
+        break;
+
+      case "notification":
+        document.querySelector(".notification").textContent = event.value;
+        break;
+
       case "board_update":
         // a string with each word seperated by space 
         // and only the empty cells maked as None

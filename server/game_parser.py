@@ -1,5 +1,7 @@
 
-from utils import cheack_move_legality, broadcase_move, broadcaset_board
+import time
+from utils import cheack_move_legality, broadcast_move
+from utils import broadcast_board, broadcast_game_state
 from utils import send_error_notification, check_if_game_over
 
 # takes a dictionary in the form of {'row': 3, 'col': 5}
@@ -48,40 +50,42 @@ def json_parser(event, session, player_id):
 # between players. the state is stored in session object
 def taking_turns_state_machine(session, player_id, board_pos_row, board_pos_col, board_pos_id, move_pos_id):
     if session.player_turn_state == 'player_0_turn':
-        if player_id == 0:
-            if not cheack_move_legality(session, player_id, board_pos_row, board_pos_col, move_pos_id):
-                send_error_notification(player_id)
-            else:
-                # now we are in state A
-                session.player_turn_state = 'player_1_turn'
-                # string for boradcasting the move
-                str = board_pos_id + ' ' + move_pos_id # todo
-                session.update_game_state(str, player_id, move_pos_id, board_pos_row, board_pos_col)
-                session.checkerboard.print_board()
-                broadcase_move(session.socketlist, str)
-                broadcaset_board(session.socketlist, session.get_current_state())
-                check_if_game_over(session)
+        if not cheack_move_legality(session, player_id, board_pos_row, board_pos_col, move_pos_id):
+            send_error_notification(player_id)
+        else:
+            # now we are in state A
+            session.player_turn_state = 'player_1_turn'
+            # string for boradcasting the move
+            str = board_pos_id + ' ' + move_pos_id # todo
+            session.update_game_state(str, player_id, move_pos_id, board_pos_row, board_pos_col)
+            session.checkerboard.print_board()
+            broadcast_move(session.socketlist, str)
+            broadcast_board(session.socketlist, session.get_current_state())
+            check_if_game_over(session)
+            broadcast_game_state(session.socketlist, 'Player 1 Turn')
     
     if session.player_turn_state == 'player_1_turn':
-        if player_id == 1:
-            if not cheack_move_legality(session, player_id, board_pos_row, board_pos_col, move_pos_id):
-                send_error_notification(player_id)
-            else:
-                # now we are in state A
-                session.player_turn_state = 'player_0_turn'
-                # string for boradcasting the move
-                str = board_pos_id + ' ' + move_pos_id # todo
-                session.update_game_state(str, player_id, move_pos_id, board_pos_row, board_pos_col)
-                session.checkerboard.print_board()
-                broadcase_move(session.socketlist, str)
-                broadcaset_board(session.socketlist, session.get_current_state())
-                check_if_game_over(session)
+        if not cheack_move_legality(session, player_id, board_pos_row, board_pos_col, move_pos_id):
+            send_error_notification(player_id)
+        else:
+            # now we are in state A
+            session.player_turn_state = 'player_0_turn'
+            # string for boradcasting the move
+            str = board_pos_id + ' ' + move_pos_id # todo
+            session.update_game_state(str, player_id, move_pos_id, board_pos_row, board_pos_col)
+            session.checkerboard.print_board()
+            broadcast_move(session.socketlist, str)
+            broadcast_board(session.socketlist, session.get_current_state())
+            check_if_game_over(session)
+            broadcast_game_state(session.socketlist, 'Player 0 Turn')
 
 
 def game_progression_state_machine(session, event):
     if session.game_lifetime_state == 'game_over':
+        time.sleep(10)
         print('wait_for_start_button')
         session.game_lifetime_state = 'waiting_for_start_button'
+        broadcast_game_state(session.socketlist, 'Waiting for Start Button')
 
     if session.game_lifetime_state == 'waiting_for_start_button':
         if event['action'] == 'start_game_button_pressed':
