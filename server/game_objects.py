@@ -266,7 +266,7 @@ class session:
 
         print('gamestate is updated with the move ' + move_str) # todo
 
-    def remove_player(self, websocket):
+    def reset_session(self):
         pass
 
 

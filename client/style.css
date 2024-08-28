@@ -3,30 +3,37 @@ body {
     text-align: center;
 }
 .buttons {
-    font-size: 4em;
+    font-size: 1em;
     display: flex;
     justify-content: center;
 }
-.button, .value {
+.notification_box {
+    color: rgb(38, 0, 255);
+    border: medium solid;
+    font-size: 2em;
+    display: flex;
+    justify-content: center;
+    width: 500px;
+    height: 80px;
+    margin: 2rem;
+}
+.button {
     line-height: 1;
     padding: 2rem;
     margin: 2rem;
     border: medium solid;
-    min-height: 1em;
-    min-width: 1em;
-}
-.button {
     cursor: pointer;
     user-select: none;
 }
 .start_game_button {
     color: red;
-    margin: 0.25rem;
-    padding: 0.25rem;
     border: medium solid;
     font-size: 2em;
     display: flex;
     justify-content: center;
+    width: 240px;
+    height: 80px;
+    margin: 2rem;
 }
 .plus {
     color: green;

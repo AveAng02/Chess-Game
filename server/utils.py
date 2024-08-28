@@ -1,4 +1,5 @@
 
+import random
 import json
 from websockets.asyncio.server import broadcast
 
@@ -29,7 +30,6 @@ def broadcase_move(sktlst, str):
     broadcast(sktlst, json.dumps({"type": "game_history", "value": str}))
 
 def broadcaset_board(sktlst, str):
-    print(str)
     broadcast(sktlst, json.dumps({"type": "board_update", "value": str}))
 
 def send_error_notification(player_id):
@@ -46,6 +46,13 @@ def check_if_game_over(session):
     elif len(plrlst[1].piecelist) == 0:
         is_over = True
         peint('declare Player 0 as winner')
+        session.game_lifetime_state = 'game_over'
+
+    is_over = (random.randrange(0, 5) < 3)
+
+    print('checking if gameover = ' + str(random.randrange(0, 5) < 3))
+
+    if is_over:
         session.game_lifetime_state = 'game_over'
 
     return is_over # todo

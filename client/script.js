@@ -55,7 +55,7 @@ window.addEventListener("DOMContentLoaded", () => {
         break;
       
       case "users": // TODO: make players
-        const users = `${event.count} user${event.count == 1 ? "" : "s"}`;
+        const users = `${event.count} sessions${event.count == 1 ? "" : "s"}`;
         document.querySelector(".users").textContent = users;
         break;
       default:
