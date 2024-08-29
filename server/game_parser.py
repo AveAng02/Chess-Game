@@ -1,5 +1,6 @@
 
-import time
+import json
+from websockets.asyncio.server import broadcast
 from utils import cheack_move_legality, broadcast_move
 from utils import broadcast_board, broadcast_game_state
 from utils import send_error_notification, check_if_game_over
@@ -51,8 +52,9 @@ def json_parser(event, session, player_id):
 def taking_turns_state_machine(session, player_id, board_pos_row, board_pos_col, board_pos_id, move_pos_id):
     if session.player_turn_state == 'player_0_turn':
         if not cheack_move_legality(session, player_id, board_pos_row, board_pos_col, move_pos_id):
-            send_error_notification(player_id)
+            send_error_notification(player_id, session.socketlist)
         else:
+            broadcast(session.socketlist, json.dumps({"type": "notification", "value": "Valid Move"}))
             # now we are in state A
             session.player_turn_state = 'player_1_turn'
             # string for boradcasting the move
@@ -66,8 +68,9 @@ def taking_turns_state_machine(session, player_id, board_pos_row, board_pos_col,
     
     if session.player_turn_state == 'player_1_turn':
         if not cheack_move_legality(session, player_id, board_pos_row, board_pos_col, move_pos_id):
-            send_error_notification(player_id)
+            send_error_notification(player_id, session.socketlist)
         else:
+            broadcast(session.socketlist, json.dumps({"type": "notification", "value": "Valid Move"}))
             # now we are in state A
             session.player_turn_state = 'player_0_turn'
             # string for boradcasting the move
@@ -82,7 +85,6 @@ def taking_turns_state_machine(session, player_id, board_pos_row, board_pos_col,
 
 def game_progression_state_machine(session, event):
     if session.game_lifetime_state == 'game_over':
-        time.sleep(10)
         print('wait_for_start_button')
         session.game_lifetime_state = 'waiting_for_start_button'
         broadcast_game_state(session.socketlist, 'Waiting for Start Button')
@@ -91,3 +93,4 @@ def game_progression_state_machine(session, event):
         if event['action'] == 'start_game_button_pressed':
             print('continue_game_subrouting')
             session.game_lifetime_state = 'continue_game_subrouting'
+            broadcast(session.socketlist, json.dumps({"type": "state_box", "value": 'Waiting for Player 0'}))

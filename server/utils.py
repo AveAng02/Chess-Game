@@ -24,15 +24,6 @@ def cheack_move_legality(session, player_id, board_pos_row, board_pos_col, comma
             if pc.is_at(dest_row, dest_col):
                 state1 = False
 
-    if not state1:
-        temp_set = set()
-        temp_set.add(list(session.socketlist)[player_id])
-        broadcast(temp_set, json.dumps({"type": "notification", "value": "Invalid move play again."}))
-    else:
-        temp_set = set()
-        temp_set.add(list(session.socketlist)[player_id])
-        broadcast(temp_set, json.dumps({"type": "notification", "value": " "}))
-    
     return state1 # todo
 
 def broadcast_move(sktlst, str):
@@ -44,7 +35,10 @@ def broadcast_board(sktlst, str):
 def broadcast_game_state(sktlst, str):
     broadcast(sktlst, json.dumps({"type": "state_box", "value": str}))
 
-def send_error_notification(player_id):
+def send_error_notification(player_id, sktlst):
+    temp_set = set()
+    temp_set.add(list(sktlst)[player_id])
+    broadcast(sktlst, json.dumps({"type": "notification", "value": "Invalid move play again."}))
     print('send error notification to ' + str(player_id))
 
 def check_if_game_over(session):
@@ -59,10 +53,6 @@ def check_if_game_over(session):
         is_over = True
         broadcast_game_state(session.socketlist, 'Player 0 Won')
         session.game_lifetime_state = 'game_over'
-
-    is_over = (random.randrange(0, 5) < 3)
-
-    print('checking if gameover = ' + str(random.randrange(0, 5) < 3))
 
     if is_over:
         session.game_lifetime_state = 'game_over'
