@@ -1,4 +1,4 @@
-# Hitwiket SE Assignment
+# 2 Player Chess
 #### Turn-based Chess-like Game with Websocket Communication
 
 # How to get the system up and running
